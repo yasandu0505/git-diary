@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from github import Github
 import os
 from dotenv import load_dotenv
+from zoneinfo import ZoneInfo
+import yaml
 
 load_dotenv()
 app = FastAPI()
@@ -11,6 +13,12 @@ gh = Github(os.getenv("GITHUB_TOKEN"))
 def get_commits(username: str):
     user = gh.get_user(username)
     commits_summary = []
+    
+    with open("config.yaml") as f:
+        config = yaml.safe_load(f)
+
+    time_zone = config["time"]["time_zone"]
+    
     for repo in user.get_repos():
         try:
             # commits = repo.get_commits()
@@ -20,9 +28,11 @@ def get_commits(username: str):
             #         "message": commit.commit.message,
             #         "date": commit.commit.author.date.isoformat()
             #     })
+            
+            local_created = repo.created_at.astimezone(ZoneInfo(time_zone))
             commits_summary.append({
                 "repo": repo.name,
-                 "created_at": repo.created_at.isoformat()
+                 "created_at": local_created.isoformat()
             })
         except:
             continue
