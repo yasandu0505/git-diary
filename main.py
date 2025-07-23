@@ -19,7 +19,8 @@ def get_commits(username: str):
 
     time_zone = config["time"]["time_zone"]
     
-    for repo in user.get_repos():
+    repos = sorted(user.get_repos(), key=lambda r: r.updated_at, reverse=True)
+    for repo in repos:
         try:
             # commits = repo.get_commits()
             # for commit in commits[:5]:
@@ -30,9 +31,11 @@ def get_commits(username: str):
             #     })
             
             local_created = repo.created_at.astimezone(ZoneInfo(time_zone))
+            local_updated = repo.updated_at.astimezone(ZoneInfo(time_zone))
             commits_summary.append({
                 "repo": repo.name,
-                 "created_at": local_created.isoformat()
+                "created_at": local_created.isoformat(),
+                "update_at": local_updated.isoformat()
             })
         except:
             continue
