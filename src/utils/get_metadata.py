@@ -76,31 +76,24 @@ def get_commits_from_repo_with_date_filters(username: str, reponame: str, from_d
     
     repo_commits_metadata = get_commits_from_repo(username,reponame)
     
-    # Convert string dates to datetime objects for comparison
+    # Convert filter dates to datetime objects
     from_datetime = datetime.strptime(from_date, '%Y-%m-%d')
     to_datetime = datetime.strptime(to_date, '%Y-%m-%d')
-    # Add 23:59:59 to to_date to include the entire day
-    to_datetime = to_datetime.replace(hour=23, minute=59, second=59)
     
-    # Filter commits based on date range
     filtered_commits = []
     
     for commit in repo_commits_metadata['commits']:
-        # Parse the commit date (format: '2025-07-23T18:13:08+05:30')
-        commit_date_str = commit['date']
-        # Remove timezone info and parse
-        commit_date_clean = commit_date_str.split('+')[0].split('-')[0:3]  # Get YYYY-MM-DD part
-        commit_date_clean = '-'.join(commit_date_clean[:3]) + 'T' + commit_date_str.split('T')[1].split('+')[0]
-        commit_datetime = datetime.strptime(commit_date_clean.split('+')[0], '%Y-%m-%dT%H:%M:%S')
+        # Extract just the date part from commit date string
+        # '2025-07-23T18:13:08+05:30' -> '2025-07-23'
+        commit_date_only = commit['date'].split('T')[0]
+        commit_datetime = datetime.strptime(commit_date_only, '%Y-%m-%d')
         
-        # Check if commit date is within the range
+        # Compare dates (including both from_date and to_date)
         if from_datetime <= commit_datetime <= to_datetime:
             filtered_commits.append(commit)
     
-    # Return the same structure with filtered commits
     return {
         'repository': repo_commits_metadata['repository'],
         'total_commits': len(filtered_commits),
         'commits': filtered_commits
     }
-    
