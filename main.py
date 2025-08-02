@@ -37,7 +37,6 @@ def main():
                 'message': commit_message
                 })
         
-        print(commits)
         diary_entry = generate_summary_from_commits(commits)
         print(diary_entry)
         
