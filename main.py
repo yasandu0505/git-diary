@@ -30,9 +30,14 @@ def main():
         repo_commits_metadata_with_date_range = get_commits_from_repo_with_date_filters(user_input.username, user_input.repo, user_input.from_date, user_input.to_date)
         
         for commit in repo_commits_metadata_with_date_range['commits']:
-            clean_message = commit['message'].replace('\n\n', ' - ')
-            commits.append(clean_message)
-            
+            commit_message = commit['message'].replace('\n\n', ' - ')
+            commit_date = commit['date']
+            commits.append({
+                'date': commit_date,
+                'message': commit_message
+                })
+        
+        print(commits)
         diary_entry = generate_summary_from_commits(commits)
         print(diary_entry)
         

@@ -28,50 +28,56 @@ def generate_summary_from_commits(commits):
     # Initialize the Gemini model
     model = genai.GenerativeModel('gemini-1.5-flash')
     
-    # Format commits for the AI prompt - they're simple strings
+    # Format commits for the AI prompt - they're dict objects with date and message
     commit_details = []
     for i, commit in enumerate(commits, 1):
-        commit_details.append(f"{i}. {commit}")
+        date = commit.get('date', 'Unknown date')
+        message = commit.get('message', 'No message')
+        commit_details.append(f"{i}. [{date}] {message}")
     
     commits_text = "\n".join(commit_details)
     
     # Create the prompt for Gemini
     prompt = f"""
-    Analyze the following git commits and create a professional work summary in the exact format shown below. and do not hallucinate
+    Analyze the following git commits and create a summary organized by date. 
 
     Format the response as:
-    ✅ **Summary of Work Completed:**
-    In this week, I focused on [brief overview]. Below is a breakdown of the work I completed:
+    
+    # 📅 Development Summary by Date
 
-    [Number each major area of work with detailed bullet points using * for sub-items]
+    For each date found in the commits, create a section like this:
+    ## [Day Name], [Date] (e.g., "Tuesday, July 23, 2025")
+    
+    ✅ **Work Completed:**
+    - [Brief summary of what was accomplished]
+    - [Group related commits into logical points]
+    - [Include specific features/changes made]
 
-    📌 **Key Focus Areas:**
-    * [List 3-4 main categories of work done]
+    📊 **Commits:** [number] commits
+
+    ---
 
     Requirements:
-    - Group related commits into logical sections
-    - Use professional, clear language
-    - Include specific technical details from commit messages
-    - Start each major section with a numbered header
-    - Use bullet points with * for sub-items
-    - End with key focus areas summary
-    - Be comprehensive but well-organized
+    - Group commits by their date (extract date from timestamp)
+    - Show the day name (Monday, Tuesday, etc.) and full date
+    - Provide a concise summary for each day's work
+    - List 3-5 key accomplishments per day
+    - Use bullet points for easy reading
+    - Include commit count for each day
+    - Sort dates chronologically (oldest first)
 
     Commits to analyze:
     {commits_text}
 
-    Generate a professional work summary following the exact format above.
+    Create a date-organized summary following the exact format above.
     """
     
     try:
         # Generate the summary using Gemini
         response = model.generate_content(prompt)
         
-        # Add date header to the diary entry
-        today = datetime.now().strftime("%B %d, %Y")
-        diary_entry = f"# Coding Diary - {today}\n\n{response.text}"
-        
-        return diary_entry
+        # Return the formatted summary without additional date header
+        return response.text
         
     except Exception as e:
         print(f"Error generating summary: {str(e)}")
