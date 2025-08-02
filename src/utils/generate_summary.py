@@ -37,20 +37,30 @@ def generate_summary_from_commits(commits):
     
     # Create the prompt for Gemini
     prompt = f"""
-    As a developer's coding diary assistant, analyze the following git commits and create a personal diary entry summary. 
-    
-    Write in a reflective, personal tone as if the developer is writing in their diary about their coding day. 
-    Focus on:
-    - What was accomplished today
-    - Key features or improvements made
-    - Any challenges or interesting solutions
-    - Overall progress and feelings about the work
-    
-    Commits from today:
+    Analyze the following git commits and create a professional work summary in the exact format shown below. and do not hallucinate
+
+    Format the response as:
+    ✅ **Summary of Work Completed:**
+    In this week, I focused on [brief overview]. Below is a breakdown of the work I completed:
+
+    [Number each major area of work with detailed bullet points using * for sub-items]
+
+    📌 **Key Focus Areas:**
+    * [List 3-4 main categories of work done]
+
+    Requirements:
+    - Group related commits into logical sections
+    - Use professional, clear language
+    - Include specific technical details from commit messages
+    - Start each major section with a numbered header
+    - Use bullet points with * for sub-items
+    - End with key focus areas summary
+    - Be comprehensive but well-organized
+
+    Commits to analyze:
     {commits_text}
-    
-    Create a diary entry that starts with "Dear Diary," and summarizes the coding session in a personal, reflective manner. 
-    Keep it concise but meaningful (2-3 paragraphs). Make it sound human and personal, not technical.
+
+    Generate a professional work summary following the exact format above.
     """
     
     try:
