@@ -25,7 +25,7 @@ def main():
         sys.exit(1)
         
     if user_input_typee == "username-repo-date-range":
-        repo_commits_metadata_with_date_range = get_commits_from_repo_with_date_filters(user_input.username, user_input.repo)
+        repo_commits_metadata_with_date_range = get_commits_from_repo_with_date_filters(user_input.username, user_input.repo, user_input.from_date, user_input.to_date)
         print(repo_commits_metadata_with_date_range)
         sys.exit(1)
     
