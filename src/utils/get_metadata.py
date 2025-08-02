@@ -36,7 +36,6 @@ def get_repo_metadata(username: str):
 
 
 def get_commits_from_repo(username: str, reponame: str):
-    
     try:
         user = gh.get_user(username)
         repo = user.get_repo(reponame)
@@ -70,3 +69,11 @@ def get_commits_from_repo(username: str, reponame: str):
         
     except Exception as e:
         return {"error": f"Failed to fetch commits: {str(e)}"}
+
+
+def get_commits_from_repo_with_date_filters(username: str, reponame: str):
+    print("1")
+    repo_commits_metadata = get_commits_from_repo(username,reponame)
+    print("2")
+    
+    return repo_commits_metadata
