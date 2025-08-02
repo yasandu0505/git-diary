@@ -33,7 +33,8 @@ def main():
             clean_message = commit['message'].replace('\n\n', ' - ')
             commits.append(clean_message)
             
-        generate_summary_from_commits(commits)
+        diary_entry = generate_summary_from_commits(commits)
+        print(diary_entry)
         
         sys.exit(1)
     
