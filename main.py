@@ -25,16 +25,16 @@ def main():
         sys.exit(1)
         
     if user_input_typee == "username-repo-date-range":
+        commits = []
+        
         repo_commits_metadata_with_date_range = get_commits_from_repo_with_date_filters(user_input.username, user_input.repo, user_input.from_date, user_input.to_date)
         
         for commit in repo_commits_metadata_with_date_range['commits']:
             clean_message = commit['message'].replace('\n\n', ' - ')
-            print(f"Message: {clean_message}")
-            print(f"Author: {commit['author']}")
-            print(f"Date: {commit['date']}")
-            print(f"SHA: {commit['sha']}")
-            print("-" * 50) 
+            commits.append(clean_message)
             
+        print(commits)
+        
         sys.exit(1)
     
     
