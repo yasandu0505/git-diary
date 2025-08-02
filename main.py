@@ -1,4 +1,4 @@
-from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters
+from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits
 from src.cmd import parse_args, user_input_type
 import sys
 
@@ -33,7 +33,7 @@ def main():
             clean_message = commit['message'].replace('\n\n', ' - ')
             commits.append(clean_message)
             
-        print(commits)
+        generate_summary_from_commits(commits)
         
         sys.exit(1)
     
