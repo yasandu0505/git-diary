@@ -14,6 +14,7 @@ def main():
     
     if user_input_typee == "username":
         get_repo_metadata(user_input.username)
+        
         sys.exit(1)
         
     if user_input_typee == "username-repo":

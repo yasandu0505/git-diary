@@ -8,74 +8,8 @@ import inquirer
 import json
 import os
 
-
 load_dotenv()
 gh = Github(os.getenv("GITHUB_TOKEN"))
-
-# def get_repo_metadata(username: str):
-#     user = gh.get_user(username)
-#     commits_summary = []
-    
-#     config = load_config_file()
-
-#     time_zone = config["time"]["time_zone"]
-#     start_date_of_internship = config["user_data"]["start_date"]
-    
-#     repos = sorted(user.get_repos(), key=lambda r: r.updated_at, reverse=True)
-    
-#     for repo in repos:
-#         try:
-#             local_created = repo.created_at.astimezone(ZoneInfo(time_zone))
-#             local_updated = repo.updated_at.astimezone(ZoneInfo(time_zone))
-#             commit_count = repo.get_commits(sha="main").totalCount
-#             commits_summary.append({
-#                 "repo": repo.name,
-#                 "created_at": local_created.isoformat(),
-#                 "update_at": local_updated.isoformat(),
-#                 "commit_count_on_main": commit_count
-#             })
-#         except:
-#             continue
-#     return commits_summary
-
-# def get_repo_metadata(username: str):
-#    user = gh.get_user(username)
-#    commits_summary = []
-   
-#    config = load_config_file()
-#    time_zone = config["time"]["time_zone"]
-#    start_date_of_internship = config["user_data"]["start_date"]
-   
-#    # Parse start date (assuming it's a string in ISO format)
-#    from datetime import datetime
-#    if isinstance(start_date_of_internship, str):
-#        start_date = datetime.fromisoformat(start_date_of_internship).replace(tzinfo=ZoneInfo(time_zone))
-#    else:
-#        start_date = start_date_of_internship
-   
-#    repos = user.get_repos()
-   
-#    for repo in repos:
-#        try:
-#            local_created = repo.created_at.astimezone(ZoneInfo(time_zone))
-#            local_updated = repo.updated_at.astimezone(ZoneInfo(time_zone))
-           
-#            # Filter repos active since internship start
-#            if local_created >= start_date:
-#                commit_count = repo.get_commits(sha="main").totalCount
-#                commits_summary.append({
-#                    "repo": repo.name,
-#                    "created_at": local_created.isoformat(),
-#                    "update_at": local_updated.isoformat(),
-#                    "commit_count_on_main": commit_count
-#                })
-#        except:
-#            continue
-   
-#    # Sort ascending by updated date
-#    commits_summary.sort(key=lambda x: x["update_at"])
-   
-#    return commits_summary
 
 def get_repo_metadata(username: str):
    user = gh.get_user(username)
@@ -138,6 +72,7 @@ def get_repo_metadata(username: str):
            "internship_start": start_date.isoformat()
        }
        
+       # create metadata dir if not exists
        commits_dir = 'metadata'
        os.makedirs(commits_dir, exist_ok=True)
        
@@ -167,9 +102,17 @@ def get_commits_from_repo(username: str, reponame: str):
         # Get all commits from main branch
         commits = repo.get_commits(sha="main")
         commits_list = []
+        my_commits = 0
         
         for commit in commits:
             commit_data = commit.commit
+            author_name = commit_data.author.name
+            
+            if author_name == username:
+                my_commits += 1
+            else:
+                continue
+            
             local_date = commit_data.author.date.astimezone(ZoneInfo(time_zone))
             
             commits_list.append({
@@ -184,6 +127,7 @@ def get_commits_from_repo(username: str, reponame: str):
         return {
             "repository": repo.name,
             "total_commits": commits.totalCount,
+            "my_commits": my_commits,
             "commits": commits_list
         }
         
@@ -193,9 +137,7 @@ def get_commits_from_repo(username: str, reponame: str):
 
 
 
-def fetch_and_save_commits_for_tracked_repos(username: str):
-    """Fetch commits for all tracked repositories and save them in separate JSON files"""
-    
+def fetch_and_save_commits_for_tracked_repos(username: str):    
     # Load tracked repos from metadata file
     try:
         with open('metadata/tracked_repos.json', 'r') as f:
@@ -246,7 +188,7 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
         try:
             with open(filename, 'w') as f:
                 json.dump(commits_data, f, indent=2)
-            print(f"✅ Saved {commits_data['total_commits']} commits for {repo_name} to {filename}")
+            print(f"✅ Saved {commits_data['my_commits']} commits for {repo_name} to {filename}")
             successful_fetches += 1
         except Exception as e:
             print(f"❌ Failed to save commits for {repo_name}: {str(e)}")
