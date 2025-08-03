@@ -80,15 +80,24 @@ def get_repo_metadata(username: str):
            json.dump(tracking_data, f, indent=2)
        
        print(f"\nSaved {len(selected_repos_metadata)} tracked repos to metadata/tracked_repos.json")
-       fetch_and_save_commits_for_tracked_repos(username)
+       
+       final_commits_to_preprocess = fetch_and_save_commits_for_tracked_repos(username)
+       
+       # for debug control ------------------------------------       
+       filename = "ssds.json"
+       try:
+            with open(filename, 'w') as f:
+                json.dump(final_commits_to_preprocess, f, indent=2)
+            print(f"✅ Saved")
+       except Exception as e:
+            print(f"❌ Failed ")
+       # ------------------------------------------------------
        
        return selected_repos_metadata
    
    else:
        print("No repos found since internship start date")
        return []
-
-
 
 def get_commits_from_repo(username: str, reponame: str):
     try:
@@ -134,9 +143,6 @@ def get_commits_from_repo(username: str, reponame: str):
     except Exception as e:
         return {"error": f"Failed to fetch commits: {str(e)}"}
 
-
-
-
 def fetch_and_save_commits_for_tracked_repos(username: str):    
     # Load tracked repos from metadata file
     try:
@@ -160,6 +166,7 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
     
     successful_fetches = 0
     failed_fetches = 0
+    final_commits_to_preprocess = {}
     
     print(f"Fetching commits for {len(tracked_repos)} repositories...")
     
@@ -174,6 +181,9 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
             print(f"❌ Failed to fetch commits for {repo_name}: {commits_data['error']}")
             failed_fetches += 1
             continue
+        
+        commits_data_fetched = commits_data["commits"]
+        final_commits_to_preprocess[repo_name] = commits_data_fetched
         
         # Add metadata to the commits data
         commits_data['metadata'] = {
@@ -198,12 +208,13 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
     print(f"   ✅ Successfully processed: {successful_fetches} repositories")
     print(f"   ❌ Failed: {failed_fetches} repositories")
     
-    return {
-        'successful': successful_fetches, 
-        'failed': failed_fetches,
-        'total': len(tracked_repos)
-    }
-
+    # return {
+    #     'successful': successful_fetches, 
+    #     'failed': failed_fetches,
+    #     'total': len(tracked_repos)
+    # }
+    
+    return final_commits_to_preprocess
 
 def get_commits_from_repo_with_date_filters(username: str, reponame: str, from_date: str, to_date: str):
     
