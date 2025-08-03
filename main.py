@@ -13,10 +13,7 @@ def main():
         sys.exit(1)
     
     if user_input_typee == "username":
-        repo_metadata = get_repo_metadata(user_input.username)
-        for repo in repo_metadata:
-            print(repo)
-            print("\n")
+        get_repo_metadata(user_input.username)
         sys.exit(1)
         
     if user_input_typee == "username-repo":
