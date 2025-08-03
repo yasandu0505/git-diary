@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from collections import defaultdict
+import os
 
 def chunk_commits_by_business_weeks(commits_data, internship_start_date):
     """
@@ -78,6 +79,14 @@ def chunk_commits_by_business_weeks(commits_data, internship_start_date):
         if i >= len(relevant_commits):
             break
     
+    # create dir if not exists
+    chunked_metadata = 'chunked_metadata'
+    os.makedirs(chunked_metadata, exist_ok=True)
+       
+    with open('chunked_metadata/chunked_commits_by_week.json', 'w') as f:
+           json.dump(weeks, f, indent=2)
+       
+    print(f"\n✅ Saved {len(weeks)} weeks chunked commit metadata to chunked_metadata/chunked_commits_by_week.json")
     return weeks
 
 def get_week_end_date(week_start, actual_start):

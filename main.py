@@ -20,10 +20,7 @@ def main():
         # diary_entry = generate_summary_from_commits(final_commits_to_preprocess)
         # print(diary_entry)
     
-        result = chunk_commits_by_business_weeks(final_commits_to_preprocess, start_date_of_internship)
-    
-        # Print the result as formatted JSON
-        print(json.dumps(result, indent=2))
+        chunk_commits_by_business_weeks(final_commits_to_preprocess, start_date_of_internship)
 
         sys.exit(1)
         
