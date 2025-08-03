@@ -83,17 +83,18 @@ def get_repo_metadata(username: str):
        
        final_commits_to_preprocess = fetch_and_save_commits_for_tracked_repos(username)
        
-       # for debug control ------------------------------------       
-       filename = "ssds.json"
-       try:
-            with open(filename, 'w') as f:
-                json.dump(final_commits_to_preprocess, f, indent=2)
-            print(f"✅ Saved")
-       except Exception as e:
-            print(f"❌ Failed ")
-       # ------------------------------------------------------
+       commits_preprocess_dir = 'commits_for_preprocess'
+       os.makedirs(commits_preprocess_dir, exist_ok=True)
        
-       return selected_repos_metadata
+       filename = f"{commits_preprocess_dir}/commits_for_preprocess.json"
+       try:
+           with open(filename, 'w') as f:
+               json.dump(final_commits_to_preprocess, f, indent=2)
+           print(f"✅ Saved commits for preprocess to {filename}")
+       except Exception as e:
+           print(f"❌ Failed to save commits for preprocess to {filename}")
+       
+       return final_commits_to_preprocess
    
    else:
        print("No repos found since internship start date")
@@ -207,12 +208,6 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
     print(f"\n📊 Summary:")
     print(f"   ✅ Successfully processed: {successful_fetches} repositories")
     print(f"   ❌ Failed: {failed_fetches} repositories")
-    
-    # return {
-    #     'successful': successful_fetches, 
-    #     'failed': failed_fetches,
-    #     'total': len(tracked_repos)
-    # }
     
     return final_commits_to_preprocess
 
