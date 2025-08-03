@@ -1,6 +1,7 @@
-from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits
+from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits, chunk_commits_by_business_weeks
 from src.cmd import parse_args, user_input_type
 import sys
+import json
 
 def main():
     
@@ -13,15 +14,24 @@ def main():
         sys.exit(1)
     
     if user_input_typee == "username":
-        get_repo_metadata(user_input.username)
+
+        final_commits_to_preprocess, start_date_of_internship = get_repo_metadata(user_input.username)
         
+        # diary_entry = generate_summary_from_commits(final_commits_to_preprocess)
+        # print(diary_entry)
+    
+        result = chunk_commits_by_business_weeks(final_commits_to_preprocess, start_date_of_internship)
+    
+        # Print the result as formatted JSON
+        print(json.dumps(result, indent=2))
+
         sys.exit(1)
         
     if user_input_typee == "username-repo":
         repo_commits_metadata = get_commits_from_repo(user_input.username, user_input.repo)
         print(repo_commits_metadata)
         sys.exit(1)
-        
+    
     if user_input_typee == "username-repo-date-range":
         commits = []
         

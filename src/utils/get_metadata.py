@@ -94,7 +94,7 @@ def get_repo_metadata(username: str):
        except Exception as e:
            print(f"❌ Failed to save commits for preprocess to {filename}")
        
-       return final_commits_to_preprocess
+       return final_commits_to_preprocess, start_date_of_internship
    
    else:
        print("No repos found since internship start date")
