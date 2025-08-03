@@ -1,2 +1,14 @@
 time:
   time_zone: "Asia/Colombo"
+
+user_data:
+  name_of_org: "Lanka Data Foundation"
+  address: "WSO2"
+  contact_no: "0761915021"
+  student_name: "Yasandu Imanjith"
+  student_email: "yasanduyaka2005@gmail.com"
+  student_contact: "0761915021"
+  degree: "Bsc.(Hons) in Computer Science"
+  student_id: "20221914"
+  start_date: "2025-05-15"
+
