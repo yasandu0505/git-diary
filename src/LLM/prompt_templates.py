@@ -1,34 +1,34 @@
 COMMIT_PREPROCESSING_PROMPT = """
-    Analyze the following git commits and create a summary organized by date. 
+Analyze the following git commits for a single day and create a concise daily summary.
 
-    Format the response as:
-    
-    # 📅 Development Summary by Date
+Date: {date}
+Total Commits: {commit_count}
 
-    For each date found in the commits, create a section like this:
-    ## [Day Name], [Date] (e.g., "Tuesday, July 23, 2025")
-    
-    ✅ **Work Completed:**
-    - [Brief summary of what was accomplished]
-    - [Group related commits into logical points]
-    - [Include specific features/changes made]
+Format the response as a brief daily work summary:
 
-    📊 **Commits:** [number] commits
+✅ **Work Completed:**
+- [Brief summary of main accomplishments - 2-4 bullet points max]
+- [Group related commits into logical work items]
+- [Focus on features, fixes, or improvements made]
 
-    ---
+🔧 **Technical Focus:**
+- [Key technical areas worked on]
+- [Technologies or components modified]
 
-    Requirements:
-    - Group commits by their date (extract date from timestamp)
-    - Show the day name (Monday, Tuesday, etc.) and full date
-    - Provide a concise summary for each day's work
-    - List 3-5 key accomplishments per day
-    - Use bullet points for easy reading
-    - Include commit count for each day
-    - Sort dates chronologically (oldest first)
+💡 **Key Changes:**
+- [Most significant changes or additions]
+- [Any notable debugging or optimization work]
 
-    Commits to analyze:
-    {commits_text}
+Requirements:
+- Keep it concise and professional
+- Focus on the business value of the work done
+- Group similar commits together
+- Highlight the most important accomplishments
+- Use clear, action-oriented language
+- Maximum 6-8 bullet points total across all sections
 
-    Create a date-organized summary following the exact format above.
-    """
-    
+Commits to analyze:
+{commits_text}
+
+Create a focused daily summary following the format above.
+"""
