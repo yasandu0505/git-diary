@@ -1,4 +1,4 @@
-from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits, chunk_commits_by_business_weeks
+from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits, chunk_commits_by_business_weeks,generate_formatted_weekly_report
 from src.cmd import parse_args, user_input_type
 import sys
 import json
@@ -16,12 +16,15 @@ def main():
     if user_input_typee == "username":
 
         final_commits_to_preprocess, start_date_of_internship = get_repo_metadata(user_input.username)
-        
-        # diary_entry = generate_summary_from_commits(final_commits_to_preprocess)
-        # print(diary_entry)
     
-        chunk_commits_by_business_weeks(final_commits_to_preprocess, start_date_of_internship)
+        chunked_commits = chunk_commits_by_business_weeks(final_commits_to_preprocess, start_date_of_internship)
+        # Generate weekly diary
+        weekly_diary = generate_summary_from_commits(chunked_commits)
 
+        # Generate formatted report
+        markdown_report = generate_formatted_weekly_report(weekly_diary)
+        print(markdown_report)
+        
         sys.exit(1)
         
     if user_input_typee == "username-repo":
