@@ -117,8 +117,18 @@ def get_commits_from_repo(username: str, reponame: str):
         for commit in commits:
             commit_data = commit.commit
             author_name = commit_data.author.name
+            print("\n")
+            print(commit)
+            print(commit.committer.name)
+            print("\n")
+            print(commit_data.author)
+            print(author_name)
+            print(user)
             
-            if author_name == username:
+            print(username)
+            print(commit_data.message)
+            
+            if commit.author and commit.author.login == username:
                 my_commits += 1
             else:
                 continue
@@ -150,6 +160,7 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
         with open('metadata/tracked_repos.json', 'r') as f:
             tracking_data = json.load(f)
         tracked_repos = tracking_data.get('tracked_repos', [])
+        print(tracked_repos)
     except FileNotFoundError:
         print("No tracked repos found. Please run get_repo_metadata first.")
         return
@@ -177,6 +188,7 @@ def fetch_and_save_commits_for_tracked_repos(username: str):
         
         # Get commits for this repository
         commits_data = get_commits_from_repo(username, repo_name)
+        print(commits_data)
         
         if 'error' in commits_data:
             print(f"❌ Failed to fetch commits for {repo_name}: {commits_data['error']}")
