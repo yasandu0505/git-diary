@@ -1,10 +1,26 @@
 from src.utils import get_repo_metadata, get_commits_from_repo, get_commits_from_repo_with_date_filters, generate_summary_from_commits, chunk_commits_by_business_weeks,generate_formatted_weekly_report
 from src.cmd import parse_args, user_input_type
 import sys
-import json
+from pyfiglet import figlet_format
+from termcolor import colored
 
 def main():
     
+    ascii_art = figlet_format('Daily - Dev ...', font='big')
+    colored_art = colored(ascii_art, color='cyan')
+    print("\n" + colored_art)
+    
+    intro_lines = [
+        "* Internship Diary Automation Tool",
+        "* This program automates adding daily development logs",
+        "  to your internship record book with descriptive data.",
+        "* Author: Yasandu Imanjith",
+        "* Version: 1.0.0",
+        "============================================================="
+        ]
+
+    for line in intro_lines:
+        print(colored(line, "cyan"))
     user_input = parse_args()
   
     user_input_typee = user_input_type(user_input)
